@@ -1,19 +1,14 @@
 # limiter
 
-[![Build Status](https://travis-ci.org/jhurliman/node-rate-limiter.png)](https://travis-ci.org/jhurliman/node-rate-limiter)
-[![NPM Downloads](https://img.shields.io/npm/dm/limiter.svg?style=flat)](https://www.npmjs.com/package/limiter)
+This is a fork of [node-rate-limiter](https://github.com/jhurliman/node-rate-limiter)
 
 Provides a generic rate limiter for the web and node.js. Useful for API clients,
-web crawling, or other tasks that need to be throttled. Two classes are exposed, 
-RateLimiter and TokenBucket. TokenBucket provides a lower level interface to 
+web crawling, or other tasks that need to be throttled. Two classes are exposed,
+RateLimiter and TokenBucket. TokenBucket provides a lower level interface to
 rate limiting with a configurable burst rate and drip rate. RateLimiter sits on
 top of the token bucket and adds a restriction on the maximum number of tokens
 that can be removed each interval to comply with common API restrictions such as
 "150 requests per hour maximum".
-
-## Installation
-
-    yarn add limiter
 
 ## Usage
 
@@ -84,10 +79,8 @@ import { RateLimiter } from "limiter";
 
 const limiter = new RateLimiter({ tokensPerInterval: 10, interval: "second" });
 
-if (limiter.tryRemoveTokens(5))
-  console.log('Tokens removed');
-else
-  console.log('No tokens removed');
+if (limiter.tryRemoveTokens(5)) console.log("Tokens removed");
+else console.log("No tokens removed");
 ```
 
 To get the number of remaining tokens **outside** the `removeTokens` promise,
@@ -117,7 +110,7 @@ const FILL_RATE = 1024 * 1024 * 50; // 50KB/sec sustained rate
 const bucket = new TokenBucket({
   bucketSize: BURST_RATE,
   tokensPerInterval: FILL_RATE,
-  interval: "second"
+  interval: "second",
 });
 
 async function handleData(myData) {
@@ -128,10 +121,10 @@ async function handleData(myData) {
 
 ## Additional Notes
 
-Both the token bucket and rate limiter should be used with a message queue or 
-some way of preventing multiple simultaneous calls to removeTokens(). 
-Otherwise, earlier messages may get held up for long periods of time if more 
-recent messages are continually draining the token bucket. This can lead to 
+Both the token bucket and rate limiter should be used with a message queue or
+some way of preventing multiple simultaneous calls to removeTokens().
+Otherwise, earlier messages may get held up for long periods of time if more
+recent messages are continually draining the token bucket. This can lead to
 out of order messages or the appearance of "lost" messages under heavy load.
 
 ## License

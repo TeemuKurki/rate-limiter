@@ -1,6 +1,14 @@
-import { getMilliseconds, wait } from "./clock";
+import { getMilliseconds, wait } from "./clock.ts";
 
-export type Interval = number | "second" | "sec" | "minute" | "min" | "hour" | "hr" | "day";
+export type Interval =
+  | number
+  | "second"
+  | "sec"
+  | "minute"
+  | "min"
+  | "hour"
+  | "hr"
+  | "day";
 
 export type TokenBucketOpts = {
   bucketSize: number;
@@ -31,7 +39,12 @@ export class TokenBucket {
   content: number;
   lastDrip: number;
 
-  constructor({ bucketSize, tokensPerInterval, interval, parentBucket }: TokenBucketOpts) {
+  constructor({
+    bucketSize,
+    tokensPerInterval,
+    interval,
+    parentBucket,
+  }: TokenBucketOpts) {
     this.bucketSize = bucketSize;
     this.tokensPerInterval = tokensPerInterval;
 
@@ -79,7 +92,9 @@ export class TokenBucket {
 
     // Make sure the bucket can hold the requested number of tokens
     if (count > this.bucketSize) {
-      throw new Error(`Requested tokens ${count} exceeds bucket size ${this.bucketSize}`);
+      throw new Error(
+        `Requested tokens ${count} exceeds bucket size ${this.bucketSize}`
+      );
     }
 
     // Drip new tokens into this bucket
@@ -87,7 +102,9 @@ export class TokenBucket {
 
     const comeBackLater = async () => {
       // How long do we need to wait to make up the difference in tokens?
-      const waitMs = Math.ceil((count - this.content) * (this.interval / this.tokensPerInterval));
+      const waitMs = Math.ceil(
+        (count - this.content) * (this.interval / this.tokensPerInterval)
+      );
       await wait(waitMs);
       return this.removeTokens(count);
     };
@@ -137,7 +154,8 @@ export class TokenBucket {
     if (count > this.content) return false;
 
     // Try to remove the requested tokens from the parent bucket
-    if (this.parentBucket && !this.parentBucket.tryRemoveTokens(count)) return false;
+    if (this.parentBucket && !this.parentBucket.tryRemoveTokens(count))
+      return false;
 
     // Remove the requested tokens from this bucket and return
     this.content -= count;

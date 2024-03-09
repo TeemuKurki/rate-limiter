@@ -1,5 +1,5 @@
-import { Interval, TokenBucket } from "./TokenBucket";
-import { getMilliseconds, wait } from "./clock";
+import { Interval, TokenBucket } from "./TokenBucket.ts";
+import { getMilliseconds, wait } from "./clock.ts";
 
 export type RateLimiterOpts = {
   tokensPerInterval: number;
@@ -25,7 +25,11 @@ export class RateLimiter {
   tokensThisInterval: number;
   fireImmediately: boolean;
 
-  constructor({ tokensPerInterval, interval, fireImmediately }: RateLimiterOpts) {
+  constructor({
+    tokensPerInterval,
+    interval,
+    fireImmediately,
+  }: RateLimiterOpts) {
     this.tokenBucket = new TokenBucket({
       bucketSize: tokensPerInterval,
       tokensPerInterval,
@@ -60,7 +64,10 @@ export class RateLimiter {
 
     // Advance the current interval and reset the current interval token count
     // if needed
-    if (now < this.curIntervalStart || now - this.curIntervalStart >= this.tokenBucket.interval) {
+    if (
+      now < this.curIntervalStart ||
+      now - this.curIntervalStart >= this.tokenBucket.interval
+    ) {
       this.curIntervalStart = now;
       this.tokensThisInterval = 0;
     }
@@ -71,7 +78,9 @@ export class RateLimiter {
       if (this.fireImmediately) {
         return -1;
       } else {
-        const waitMs = Math.ceil(this.curIntervalStart + this.tokenBucket.interval - now);
+        const waitMs = Math.ceil(
+          this.curIntervalStart + this.tokenBucket.interval - now
+        );
         await wait(waitMs);
         const remainingTokens = await this.tokenBucket.removeTokens(count);
         this.tokensThisInterval += count;
@@ -102,13 +111,17 @@ export class RateLimiter {
 
     // Advance the current interval and reset the current interval token count
     // if needed
-    if (now < this.curIntervalStart || now - this.curIntervalStart >= this.tokenBucket.interval) {
+    if (
+      now < this.curIntervalStart ||
+      now - this.curIntervalStart >= this.tokenBucket.interval
+    ) {
       this.curIntervalStart = now;
       this.tokensThisInterval = 0;
     }
 
     // If we don't have enough tokens left in this interval, return false
-    if (count > this.tokenBucket.tokensPerInterval - this.tokensThisInterval) return false;
+    if (count > this.tokenBucket.tokensPerInterval - this.tokensThisInterval)
+      return false;
 
     // Try to remove the requested number of tokens from the token bucket
     const removed = this.tokenBucket.tryRemoveTokens(count);
