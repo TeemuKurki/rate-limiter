@@ -1,21 +1,50 @@
-import { RateLimiter } from "./RateLimiter";
-import { Interval } from "./TokenBucket";
+import { RateLimiter } from "./RateLimiter.ts";
+import { Interval } from "./TokenBucket.ts";
+import {
+  assertThrows,
+  assertInstanceOf,
+} from "https://deno.land/std@0.219.0/assert/mod.ts";
 
-describe("RateLimiter", () => {
-  describe("interval validation", () => {
-    it("invalid interval", () => {
-      const junkInterval = ("junk" as unknown) as Interval;
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: junkInterval })).toThrow();
-    });
+Deno.test("RateLimiter", async (t) => {
+  await t.step("invalid interval", () => {
+    const junkInterval = "junk" as unknown as Interval;
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "sec" }),
+      RateLimiter
+    );
+    assertThrows(
+      () => new RateLimiter({ tokensPerInterval: 1, interval: junkInterval })
+    );
+  });
 
-    it("valid intervals", () => {
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "sec" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "second" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "min" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "minute" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "hr" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "hour" })).not.toThrow();
-      expect(() => new RateLimiter({ tokensPerInterval: 1, interval: "day" })).not.toThrow();
-    });
+  await t.step("valid intervals", () => {
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "sec" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "second" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "min" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "minute" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "hr" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "hour" }),
+      RateLimiter
+    );
+    assertInstanceOf(
+      new RateLimiter({ tokensPerInterval: 1, interval: "day" }),
+      RateLimiter
+    );
   });
 });
