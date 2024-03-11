@@ -1,5 +1,10 @@
 {
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
   "name": "@teemukurki/rate-limiter",
   "version": "0.0.1",
-  "exports": "./src/mod.ts"
+  "exports": "./src/mod.ts",
+  "publish": {
+    "exclude": ["src/**/*.test.ts"],
+    "include": ["src/**/*.ts", "README.md", "LICENCE.txt"]
+  }
 }
