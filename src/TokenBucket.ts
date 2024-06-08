@@ -1,5 +1,8 @@
 import { getMilliseconds, wait } from "./clock.ts";
 
+/**
+ * The interval length in milliseconds, or as one of the following strings: 'second', 'minute', 'hour', day'.
+ */
 export type Interval =
   | number
   | "second"

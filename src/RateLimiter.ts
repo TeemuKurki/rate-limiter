@@ -2,8 +2,10 @@ import { Interval, TokenBucket } from "./TokenBucket.ts";
 import { getMilliseconds, wait } from "./clock.ts";
 
 export type RateLimiterOpts = {
+  /** Maximum number of tokens that can be removed at any given moment and over the course of one interval. */
   tokensPerInterval: number;
   interval: Interval;
+  /** Whether or not the promise will resolve immediately when rate limiting is in effect. */
   fireImmediately?: boolean;
 };
 
