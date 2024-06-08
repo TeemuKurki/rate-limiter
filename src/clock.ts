@@ -1,4 +1,6 @@
-// generate timestamp or delta
+/**
+ * generate timestamp or delta
+ */
 function hrtime(previousTimestamp?: [number, number]): [number, number] {
   const clocktime = performance.now() * 1e-3;
   let seconds = Math.floor(clocktime);
@@ -14,13 +16,17 @@ function hrtime(previousTimestamp?: [number, number]): [number, number] {
   return [seconds, nanoseconds];
 }
 
-// The current timestamp in whole milliseconds
+/**
+ * The current timestamp in whole milliseconds
+ */
 export function getMilliseconds(): number {
   const [seconds, nanoseconds] = hrtime();
   return seconds * 1e3 + Math.floor(nanoseconds / 1e6);
 }
 
-// Wait for a specified number of milliseconds before fulfilling the returned promise.
+/**
+ * Wait for a specified number of milliseconds before fulfilling the returned promise.
+ */
 export function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
